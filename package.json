@@ -1,0 +1,42 @@
+{
+  "name": "benchmark",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "My new Apigee 127 Project",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": "3.x.x",
+    "a127-magic": "",
+    "volos-analytics-apigee": "",
+    "volos-analytics-common": "",
+    "volos-analytics-memory": "",
+    "volos-cache-apigee": "",
+    "volos-cache-memory": "",
+    "volos-cache-redis": "",
+    "volos-quota-apigee": "",
+    "volos-quota-memory": "",
+    "volos-quota-redis": "",
+    "volos-oauth-redis": "",
+    "volos-oauth-apigee": "",
+    "volos-analytics-apigee": "",
+    "volos-spikearrest-memory":""
+  },
+  "devDependencies": {
+    "should": "3.1.x"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "api": {
+    "name": "benchmark",
+    "basePath": "/benchmark",
+    "docsPath": "/docs",
+    "main": "app.js"
+  },
+  "dist": {
+    "shasum": "7eda424c16e7b9995ec62d25bfc688ebc9b2641e"
+  }
+}

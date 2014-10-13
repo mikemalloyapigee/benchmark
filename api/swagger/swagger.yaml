@@ -1,0 +1,124 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: Hello World App
+# during dev, should point to your local machine
+host: localhost
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+x-a127-config:
+  apigeeProxyKey: &apigeeProxyKey CONFIGURED
+  apigeeProxyUri: &apigeeProxyUri CONFIGURED
+x-volos-resources:
+  cache:
+    provider: volos-cache-memory
+    options:
+      name: name
+      ttl: 1000
+  analytics:
+    provider: "volos-analytics-apigee"
+    options:
+      key: *apigeeProxyKey
+      uri: *apigeeProxyUri
+      proxy: benchmark,
+      bufferSize: 100,
+      flushInterval: 10,
+      batchSize: 10
+  quota:
+    provider: volos-quota-memory
+    options:
+      timeUnit: minute
+      interval: 1
+      allow: 1000000
+  spikeArrest:
+    provider: "volos-spikearrest-memory"
+    options:
+      timeUnit: "minute"
+      allow: 1000000
+paths:
+  /getData:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    x-volos-authorizations: {}
+    x-volos-apply:
+     cache: {}
+     analytics: {}
+     quota: {}
+     spikeArrest: {}
+    get:
+      description: Returns 1k data to the caller
+      # used as the method name of the controller
+      operationId: getData
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: HelloWorldResponse
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: ErrorResponse
+  /postData:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    x-volos-authorizations: {}
+    x-volos-apply:
+     analytics: {}
+     quota: {}
+     spikeArrest: {}
+    post:
+      description: Posts data
+      operationId: postData
+      parameters:
+        - name: size
+          in: query
+          description: The size of the payload
+          required: true
+          type: string
+        - name: payload
+          in: body
+          description: Message payload
+          schema:
+            $ref: BodyPayload
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: HelloWorldResponse
+        default:
+          description: Error
+          schema:
+            $ref: ErrorResponse
+# complex objects have schema definitions
+definitions:
+  BodyPayload:
+    required:
+      - payload
+    properties:
+      payload:
+        type: string
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
